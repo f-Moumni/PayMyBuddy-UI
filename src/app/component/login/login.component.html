@@ -1,0 +1,39 @@
+
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+
+    <!-- Icon -->
+    <div class="fadeIn first">
+      <img src="assets/logo.png" id="icon" alt="logo" width=15px/>
+    </div>
+
+    <!-- Login Form -->
+    <form (ngSubmit)="onSubmitForm()" [formGroup]="signInForm">
+      <input type="email"
+             id="login"
+             class="fadeIn second"
+             formControlName ="mail"
+             placeholder="email" >
+      <input type="password"
+             id="password"
+             class="fadeIn third"
+             formControlName ="password"
+             placeholder="password">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox"
+                 name="remember"> Remember Me
+        </label>
+      </div>
+      <input type="submit"
+             class="fadeIn fourth"
+             [disabled]="signInForm.invalid"
+             value="Log In">
+      <input type="button"
+             (click)="onSignUp()"
+             class="fadeIn fourth"
+             value="Sign UP">
+    </form>
+  </div>
+</div>
