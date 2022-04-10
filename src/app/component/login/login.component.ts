@@ -13,12 +13,10 @@ import {TokenStorageService} from "../../service/token-storge-service";
 export class LoginComponent implements OnInit {
 
   signInForm: FormGroup;
-
-
   isLoggedIn = false;
   isLoginFailed = false;
-  errorMessage = '';
-  roles: string[] = [];
+
+
 
   constructor(private authService: AuthService, private fb :FormBuilder,private tokenStorage: TokenStorageService,private router: Router) {
     this.signInForm =this.fb.group({
@@ -43,16 +41,8 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.signInForm.value).subscribe(
       data => {
         this.tokenStorage.saveToken(data.accessToken);
-       //  this.tokenStorage.saveUser(data);
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        //   this.roles = this.tokenStorage.getUser().roles;
-        console.log(data.accessToken);
-        this.router.navigateByUrl(`user-profile/${this.signInForm.value.mail}`)
-      },
-      err => {
-        this.errorMessage = err.error.message;
-        this.isLoginFailed = true;
+        this.tokenStorage.saveUser(data.mail);
+        this.router.navigate([`home/${this.signInForm.value.mail}`])
       }
     );
   }

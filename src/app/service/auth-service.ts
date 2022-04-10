@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {catchError, Observable, throwError} from 'rxjs';
 import {User} from "../model/app-user.model";
 
 const AUTH_API = 'http://localhost:8080/';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-Type': 'application/json','Access-Control-Allow-Origin':'*' })
 };
 
 @Injectable({
@@ -25,12 +25,30 @@ export class AuthService {
   }
 
   signUp(user: User): Observable<any> {
-    return this.http.post(AUTH_API + 'api/sign-up', {
+    return this.http.post(AUTH_API + 'api/sign-up',
+    {
       firstName: user.firstName,
       lastName : user.lastName,
       birthDate : user.birthdate,
-      mail: user.email,
+      mail: user.mail,
       password: user.password
-    }, httpOptions);
+    }
+    , httpOptions);
+  }
+  // Error
+  handleError(error: HttpErrorResponse) {
+    let msg = '';
+    if (error.error instanceof ErrorEvent) {
+      // client-side error
+      msg = error.error.message;
+    } else {
+      // server-side error
+      msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(msg);
+  }
+
+  getUserProfile(mail: string | null):Observable<any> {
+    return this.http.get<any>(AUTH_API + `api/account?mail=${mail}`)
   }
 }

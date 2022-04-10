@@ -9,8 +9,9 @@ import { LoginComponent } from './component/login/login.component';
 import {AppRoutingModule} from "./app-routing.module";
 import { RegistrationComponent } from './component/registration/registration.component';
 import { UserProfileComponent } from './component/user-profile/user-profile.component';
-import {AuthInterceptor} from "./auth.interceptor";
-
+import {AuthInterceptor} from "./interceptors/auth.interceptor";
+import { HomeComponent } from './component/home/home.component';
+import { NewContactComponent } from './component/new-contact/new-contact.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,9 @@ import {AuthInterceptor} from "./auth.interceptor";
     HeaderComponent,
     LoginComponent,
     RegistrationComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    HomeComponent,
+    NewContactComponent
   ],
   imports: [
     BrowserModule,

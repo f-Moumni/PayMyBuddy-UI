@@ -1,0 +1,19 @@
+.header2 {
+  font-weight: normal;
+  margin-bottom: 1.43rem;
+  font-size: 50px;
+  font-family:  Pacifico;
+  color: #306430;
+
+}
+.main{
+  height: 45vh;
+ display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start
+
+}
+.name{
+  font-weight: bold;
+}

@@ -26,14 +26,13 @@ export class TokenStorageService {
     return sessionStorage.getItem(TOKEN_KEY);
   }
 
-  public saveUser(user:User): void {
+  public saveUser(mail:string): void {
     window.sessionStorage.removeItem(USER_KEY);
-    window.sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+    window.sessionStorage.setItem(USER_KEY, mail);
   }
 
-  /*public getUser(): any {
-
-    return JSON.parse(sessionStorage.getItem(USER_KEY));
-  }*/
+  public getUser(): any {
+    return sessionStorage.getItem(USER_KEY);
+  }
 
 }

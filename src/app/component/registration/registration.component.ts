@@ -19,16 +19,14 @@ export class RegistrationComponent implements OnInit {
     public router: Router
   ) {
     this.signupForm = this.fb.group({
-      firstName: [null, [
+      firstName: [null,
         Validators.required,
-        Validators.minLength(3),
-      ]],
-      lastName: [null,[
+      ],
+      lastName: [null,
         Validators.required,
-        Validators.minLength(3),
-      ]],
+      ],
       birthdate: [null,Validators.required],
-      email: [null,[
+      mail: [null,[
         Validators.required,
         Validators.email,
       ]],
@@ -50,10 +48,6 @@ export class RegistrationComponent implements OnInit {
         } ;
         this.message = data.message;
 
-
-    /*  if (res.result) {
-
-      }*/
     });
   }
 
