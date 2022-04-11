@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import {catchError, Observable, throwError} from 'rxjs';
+import { Observable, throwError} from 'rxjs';
 import {User} from "../model/app-user.model";
 
 const AUTH_API = 'http://localhost:8080/';

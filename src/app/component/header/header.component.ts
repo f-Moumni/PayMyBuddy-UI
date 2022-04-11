@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {Router} from "@angular/router";
+import {TokenStorageService} from "../../service/token-storge-service";
 
 @Component({
   selector: 'app-header',
@@ -6,10 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-
-  constructor() { }
+currentUserEmail !:string;
+  constructor(private router :Router, private token :TokenStorageService) { }
 
   ngOnInit(): void {
+    this.currentUserEmail =this.token.getUser();
   }
 
+  onHome() {
+    this.router.navigate([`home/${this.token}`])
+  }
 }

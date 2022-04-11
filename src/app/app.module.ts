@@ -12,6 +12,8 @@ import { UserProfileComponent } from './component/user-profile/user-profile.comp
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import { HomeComponent } from './component/home/home.component';
 import { NewContactComponent } from './component/new-contact/new-contact.component';
+import { ContactsComponent } from './component/contacts/contacts.component';
+import { ContactComponent } from './component/contact/contact.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { NewContactComponent } from './component/new-contact/new-contact.compone
     RegistrationComponent,
     UserProfileComponent,
     HomeComponent,
-    NewContactComponent
+    NewContactComponent,
+    ContactsComponent,
+    ContactComponent
   ],
   imports: [
     BrowserModule,

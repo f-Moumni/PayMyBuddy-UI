@@ -11,7 +11,7 @@ import {Router} from "@angular/router";
 export class RegistrationComponent implements OnInit {
   isSuccessful = false;
   isSignUpFailed = false;
-  message = '';
+  message !:string ;
   signupForm: FormGroup;
   constructor(
     public fb: FormBuilder,
@@ -41,7 +41,6 @@ export class RegistrationComponent implements OnInit {
           this.isSuccessful = false;
           this.isSignUpFailed = true;
          // this.signupForm.reset();
-        //  this.router.navigateByUrl('login')
         }else{
           this.isSuccessful = true;
           this.isSignUpFailed = false;
