@@ -2,12 +2,11 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { Observable, throwError} from 'rxjs';
 import {User} from "../model/app-user.model";
+import {environment} from "../../environments/environment";
 
-const AUTH_API = 'http://localhost:8080/';
+const AUTH_API = environment.AUTH_API;
 
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json','Access-Control-Allow-Origin':'*' })
-};
+const httpOptions =environment.httpOptions
 
 @Injectable({
   providedIn: 'root'

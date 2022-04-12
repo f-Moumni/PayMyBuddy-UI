@@ -15,7 +15,5 @@ currentUserEmail !:string;
     this.currentUserEmail =this.token.getUser();
   }
 
-  onHome() {
-    this.router.navigate([`home/${this.token}`])
-  }
+
 }

@@ -13,7 +13,7 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import { HomeComponent } from './component/home/home.component';
 import { NewContactComponent } from './component/new-contact/new-contact.component';
 import { ContactsComponent } from './component/contacts/contacts.component';
-import { ContactComponent } from './component/contact/contact.component';
+import { TransactionsComponent } from './component/transactions/transactions.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,7 @@ import { ContactComponent } from './component/contact/contact.component';
     HomeComponent,
     NewContactComponent,
     ContactsComponent,
-    ContactComponent
+    TransactionsComponent
   ],
   imports: [
     BrowserModule,

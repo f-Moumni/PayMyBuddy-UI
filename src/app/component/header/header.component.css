@@ -2,7 +2,7 @@
 
 }
 .navbar{
-  border-bottom: 1px solid rgba(24, 66, 24, 0.09);
+/*  border-bottom: 1px solid rgba(24, 66, 24, 0.09);*/
 }
 li :hover, a :hover{
 color: #ffffff;

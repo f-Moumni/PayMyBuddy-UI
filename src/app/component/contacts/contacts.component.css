@@ -1,0 +1,23 @@
+.space{
+  height: 5vh;
+}
+th {
+  background-color: #5bb75c;
+  color: white;
+}
+.form-contact{
+margin: 30px 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around; align-items: center;
+}
+label {
+  padding: 8px 2px;
+  margin-bottom: 0;
+  text-align:center;
+  height:34px ;
+}
+button{
+height: 30px;
+  width: 100px;
+}

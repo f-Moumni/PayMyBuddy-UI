@@ -26,13 +26,13 @@ export class NewContactComponent implements OnInit {
 
   }
   onAddContact() {
-    this.contactService.addContact(this.contactEmail).subscribe(
+    /*this.contactService.addContact(this.contactEmail).subscribe(
       data => {
         this.message = data.message;
       },
       err => {
-        this.message = err.error().message;
+        this.message = err.error.message;
       }
-    );
+    );*/
   }
 }

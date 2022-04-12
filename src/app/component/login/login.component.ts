@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
       data => {
         this.tokenStorage.saveToken(data.accessToken);
         this.tokenStorage.saveUser(data.mail);
-        this.router.navigate([`home/${this.signInForm.value.mail}`])
+        this.router.navigate([`home`])
       }
     );
   }
