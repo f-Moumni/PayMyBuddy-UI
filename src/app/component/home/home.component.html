@@ -6,7 +6,7 @@
         <h2 class="header2"> Welcome, <span >{{firstName}}</span>!</h2>
     </div>
 
-      <p class>your account balance is <span class="balance" >{{balance}}</span></p>
+      <p class>your account balance is <span class="balance" >{{ balance|currency: 'EUR'}}</span></p>
       <button type="button" class="btn btn-success">Send money</button>
 
 

@@ -11,7 +11,7 @@ import { RegistrationComponent } from './component/registration/registration.com
 import { UserProfileComponent } from './component/user-profile/user-profile.component';
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import { HomeComponent } from './component/home/home.component';
-import { NewContactComponent } from './component/new-contact/new-contact.component';
+
 import { ContactsComponent } from './component/contacts/contacts.component';
 import { TransactionsComponent } from './component/transactions/transactions.component';
 
@@ -23,7 +23,7 @@ import { TransactionsComponent } from './component/transactions/transactions.com
     RegistrationComponent,
     UserProfileComponent,
     HomeComponent,
-    NewContactComponent,
+
     ContactsComponent,
     TransactionsComponent
   ],

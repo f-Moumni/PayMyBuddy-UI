@@ -1,35 +1,143 @@
 <app-header></app-header>
 <ng-container>
-  <nav class="navbar fixed-top navbar-expand-md navbar-new-bottom">
-    <div class="navbar-collapse collapse pt-2 pt-md-0" id="navbar2">
-
-      <ul class="navbar-nav w-100 justify-content-center px-3">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Send Money</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link">Reload</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link">Pay</a>
-      </ul>
-    </div>
-  </nav>
-</ng-container>
-<ng-container>
-
-  <div class="wrapper fadeInDown">
-    <div id="formContent">
-      <!-- Tabs Titles -->
-      <!-- Icon -->
-      <div class="fadeIn first">
-        <h3 > Reload</h3>
+  <!--nav bar for operations chose -->
+  <ng-container>
+    <nav class="navbar fixed-top navbar-expand-md navbar-new-bottom">
+      <div class="navbar-collapse collapse pt-2 pt-md-0" id="navbar2">
+        <ul class="nav navbar-nav  ">
+          <li class=" nav-item ">
+            <a (click)="doDisplaySendMoney()" class="nav-link">Send Money</a>
+          </li>
+          <li class=" nav-item">
+            <a (click)="doDisplayReload()" class="nav-link">Reload</a>
+          </li>
+          <li class=" nav-item">
+            <a (click)="doDisplayBankTransfer()" class="nav-link">Bank Transfer</a>
+          </li>
+        </ul>
       </div>
-      <!-- Login Form -->
-      <form >
-
+    </nav>
+  </ng-container>
+  <!--form for end money -->
+  <ng-container *ngIf="displaySendMoneyForm==true && (contacts$ | async) as contacts " >
+    <div class="box send-money">
+      <form class="formContent" [formGroup]="sendMoneyForm">
+        <div class="form-group">
+          <label>Contacts</label>
+          <select  class="form-control" [(ngModel)]="selectedContact" (ngModelChange)="onChange($event)" [ngModelOptions]="{standalone: true}"required>
+            <option *ngFor="let contact of contacts.data.contacts " [ngValue]="contact" > {{contact.firstName}} {{contact.lastName}}</option>
+          </select>
+        </div>
+        <div class="form-group" required>
+          <label>Amount</label>
+          <input type="number" formControlName="amount" class="form-control" placeholder="0.00 €">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea formControlName="description" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="btn-from">
+          <button  (click)="doPayment()" type="submit" class="btn btn-success" [disabled]="sendMoneyForm.invalid">Send</button>
+          <button (click)="doCancel()" type="reset" class="btn  btn-warning">Cancel</button>
+        </div>
+        <div  *ngIf="isSuccessful==false" class="alert alert-danger mt-1 box"  role="alert">
+          <h4 class="alert-heading">Error!</h4>
+          {{errorMessage}}
+        </div>
+      </form>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="displayReloadForm==true ">
+    <div class="box reload">
+      <form class="formContent" [formGroup]="reloadForm">
+        <div class="form-group" required>
+          <label>Amount</label>
+          <input type="number" class="form-control" placeholder="0.00 €">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-control" rows="3"></textarea>
+        </div>
+        <div class="btn-from">
+          <button type="submit" class="btn btn-success" [disabled]="reloadForm.invalid">Reload</button>
+          <button (click)="doCancel()" type="reset" class="btn  btn-warning">Cancel</button>
+        </div>
 
       </form>
     </div>
-  </div>
+  </ng-container>
+
+  <ng-container *ngIf="displayBTransferForm==true">
+    <div class="box bankTransfer">
+      <form class="formContent" [formGroup]="bTransferForm">
+        <div class="form-group" required>
+          <label>IBAN</label>
+          <input type="text" class="form-control" placeholder="Iban" readonly>
+        </div>
+        <div class="form-group" required>
+          <label>Amount</label>
+          <input type="number" class="form-control" placeholder="0.00 €">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-control" rows="3"></textarea>
+        </div>
+        <div class="btn-from">
+          <button type="submit" class="btn btn-success" [disabled]="bTransferForm.invalid">Transfer</button>
+          <button (click)="doCancel()" type="reset" class="btn  btn-warning">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+  </ng-container>
+  <ng-container>
+    <div class="con">
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown "><a class="dropdown-toggle" data-toggle="dropdown" href="#">ALL <span
+              class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Page 1-1</a></li>
+                    <li><a href="#">Page 1-1</a></li>
+                    <li><a href="#">Page 1-2</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">Page 1-2</a></li>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Page 1-1</a></li>
+                  <li><a href="#">Page 1-2</a></li>
+                </ul>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th><span class="glyphicon glyphicon-arrow-left"></span><span class=" glyphicon glyphicon-arrow-right"></span>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>le nom</td>
+          <td class="description">cinéma pour alex</td>
+          <td>241022</td>
+          <td>john@example.com</td>
+          <th><span class="glyphicon glyphicon-arrow-left left"></span><span
+            class=" glyphicon glyphicon-arrow-right .text-danger"></span></th>
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
 </ng-container>

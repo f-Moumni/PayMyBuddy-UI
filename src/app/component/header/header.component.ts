@@ -15,5 +15,11 @@ currentUserEmail !:string;
     this.currentUserEmail =this.token.getUser();
   }
 
+  doLogout() {
+    let removeToken = this.token.removeToken();
+    if (removeToken == null) {
+      this.router.navigate(['login']);
+    }
+  }
 
 }

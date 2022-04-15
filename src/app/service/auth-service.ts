@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import { Observable, throwError} from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
 import {User} from "../model/app-user.model";
 import {environment} from "../../environments/environment";
+import {CustomResponse} from "../model/custom-response";
 
-const AUTH_API = environment.AUTH_API;
+const API = environment.AUTH_API;
 
 const httpOptions =environment.httpOptions
 
@@ -18,13 +19,13 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login( formValue :{mail: string, password: string}): Observable<any> {
-    return this.http.post(AUTH_API + 'sign-in', {
+    return this.http.post(API + '/sign-in', {
      ...formValue
     }, httpOptions);
   }
 
   signUp(user: User): Observable<any> {
-    return this.http.post(AUTH_API + 'api/sign-up',
+    return this.http.post(API + '/api/sign-up',
     {
       firstName: user.firstName,
       lastName : user.lastName,
@@ -47,7 +48,8 @@ export class AuthService {
     return throwError(msg);
   }
 
-  getUserProfile(mail: string | null):Observable<any> {
-    return this.http.get<any>(AUTH_API + `api/account?mail=${mail}`)
+  getUserProfile():Observable<CustomResponse> {
+    return this.http.get<CustomResponse>(API + `/api/account`)
   }
+
 }

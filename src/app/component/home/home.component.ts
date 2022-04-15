@@ -11,7 +11,7 @@ import {User} from "../../model/app-user.model";
 })
 export class HomeComponent implements OnInit {
   currentUser!: User ;
-  balance:number | undefined ;
+  balance:number ;
   firstName!:string;
 
   constructor(
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   private tokenS :TokenStorageService
   ) {
     let mail = tokenS.getUser();
-    this.authService.getUserProfile(mail).subscribe((res) => {
+    this.authService.getUserProfile().subscribe((res) => {
       this.currentUser = res.data.account;
       this.firstName =this.currentUser.firstName;
       this.balance =this.currentUser.balance;

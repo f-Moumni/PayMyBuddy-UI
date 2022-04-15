@@ -25,6 +25,10 @@ export class TokenStorageService {
     // @ts-ignore
     return sessionStorage.getItem(TOKEN_KEY);
   }
+  public removeToken(): void {
+
+    return sessionStorage.removeItem(TOKEN_KEY);
+  }
 
   public saveUser(mail:string): void {
     window.sessionStorage.removeItem(USER_KEY);

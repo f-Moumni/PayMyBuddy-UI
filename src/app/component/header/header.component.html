@@ -1,4 +1,4 @@
-<nav class="navbar navbar-light mb-2">
+<nav class="navbar navbar-light ">
   <div class="container-fluid">
     <div class="navbar-header">
      <img src="assets/logo.png">
@@ -10,7 +10,7 @@
       <li><a routerLink='/transfer' >Transfer</a></li>
       <li><a  routerLink='/contacts' routerLinkActive="active"  >Contacts</a></li>
       <li><a ><span class="glyphicon glyphicon-user"></span> </a></li>
-      <li><a ><span class="glyphicon glyphicon-off"></span> </a></li>
+      <li><a (click)="doLogout()"><span class="glyphicon glyphicon-off"></span> </a></li>
     </ul>
   </div>
 </nav>

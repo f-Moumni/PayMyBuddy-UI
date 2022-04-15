@@ -44,6 +44,7 @@ export class RegistrationComponent implements OnInit {
         }else{
           this.isSuccessful = true;
           this.isSignUpFailed = false;
+          this.router.navigate([`login`])
         } ;
         this.message = data.message;
 

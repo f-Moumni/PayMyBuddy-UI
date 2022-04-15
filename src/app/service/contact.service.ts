@@ -6,65 +6,57 @@ import {Contact} from "../model/contact.model";
 import {environment} from "../../environments/environment";
 import {CustomResponse} from "../model/custom-response";
 
-const AUTH_API = environment.AUTH_API;
-
+const API = environment.AUTH_API;
 const httpOptions =environment.httpOptions
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactService {
-currentUserMail !:string;
-  isSuccessful = false;
-  isSignUpFailed = false;
-  errorMessage = '';
-//  contacts$!:Observable<CustomResponse>;
 
-  constructor(private http: HttpClient,private tokenStorage :TokenStorageService) {
-    this.currentUserMail = tokenStorage.getUser();
+  constructor(private http: HttpClient) {
+
   }
 
   /*searchContact(mail: string | null):Observable<any> {
     return this.http.get<any>(AUTH_API + `contact?mail=${mail}`,httpOptions)
   }*/
 
-  contacts$ =  <Observable<CustomResponse<Contact>>>
-    this.http.get<CustomResponse<Contact>>(AUTH_API + `contact/all?mail=${this.tokenStorage.getUser()}`,httpOptions)
+  contacts$ = <Observable<CustomResponse>>
+    this.http.get<CustomResponse>(API + `/contact/all`,httpOptions)
       .pipe(
         catchError(this.handleError)
   );
-  contact$ = (contactEmail :string) => <Observable<CustomResponse<Contact>>>
-    this.http.post<CustomResponse<Contact>>(AUTH_API + 'contact',{
-      contactMail:contactEmail,
-      mail: this.currentUserMail
-    },httpOptions)
+  contact$ = (contactEmail :string) => <Observable<CustomResponse>>
+    this.http.post<CustomResponse>(API + `/contact?mail=${contactEmail}`,httpOptions)
       .pipe(
         catchError(this.handleError)
       );
 
-  removeContact$=(contactEmail :string) => <Observable<CustomResponse<Contact>>>
-    this.http.put<CustomResponse<Contact>>(AUTH_API + 'contact',{
-      contactMail:contactEmail,
-      mail: this.currentUserMail
-    },httpOptions)
+  removeContact$=(contactEmail :string) => <Observable<CustomResponse>>
+    this.http.delete<CustomResponse>(API + `/contact?mail=${contactEmail}`,httpOptions)
       .pipe(
         catchError(this.handleError)
       );
 
-  /*getAllContacts():Observable<any> {
-    return this.http.get<any>(AUTH_API + `contact/all?mail=${this.tokenStorage.getUser()}`,httpOptions)
+  public deleteContact(contactEmail:string): Observable<any> {
+    return  this.http.delete<any>(API + `/contact?mail=${contactEmail}`,httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
   }
- /* addContact(contactEmail: string) :Observable<any>{
-    return this.http.post<any>(AUTH_API + 'contact',
-      {
-        contactMail:contactEmail,
-        mail: this.currentUserMail
-      }
-      , httpOptions);
-  }*/
 
-  private handleError(error:HttpErrorResponse) :Observable<never>{
-    console.log(error)
-    return throwError(`an error occurred  :${error.message}`)
+
+  private // Error
+  handleError(error: any) {
+    let msg = '';
+    if (error.error instanceof ErrorEvent) {
+      // client-side error
+      msg = error.error.message;
+    } else {
+      // server-side error
+      msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(msg);
   }
 }

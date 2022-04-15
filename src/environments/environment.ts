@@ -9,7 +9,7 @@ export const environment = {
   httpOptions : {
     headers: new HttpHeaders({ 'Content-Type': 'application/json','Access-Control-Allow-Origin':'*' })
   },
-  AUTH_API : 'http://localhost:8080/'
+  AUTH_API : 'http://localhost:8080'
 };
 
 /*

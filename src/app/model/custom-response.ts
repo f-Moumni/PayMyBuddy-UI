@@ -1,4 +1,4 @@
-export interface CustomResponse<T>{
+export interface CustomResponse{
   timeStamp:Date;
   statusCode :number;
   status :string;

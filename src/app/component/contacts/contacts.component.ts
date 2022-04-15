@@ -13,12 +13,11 @@ import {Contact} from "../../model/contact.model";
   styleUrls: ['./contacts.component.css']
 })
 export class ContactsComponent implements OnInit {
-  appState$!: Observable<AppState<CustomResponse<Contact>>>;
+  appState$!: Observable<AppState<CustomResponse>>;
   contacts$!: Observable<Contact[]>
   contactEmail!: string;
   readonly DataState = DataState;
-  message = "";
-  private dataSubject = new BehaviorSubject<CustomResponse<Contact>>(null);
+  private dataSubject = new BehaviorSubject<CustomResponse>(null);
 
   constructor(private token: TokenStorageService, private service: ContactService) {
   }
@@ -38,7 +37,7 @@ export class ContactsComponent implements OnInit {
 
   }
 
-  onAddContact(email: string) {
+  doAddContact(email: string) {
     this.appState$ = this.service.contact$(email).pipe(
       map(response => {
           this.dataSubject.next(
@@ -50,11 +49,12 @@ export class ContactsComponent implements OnInit {
       startWith({dataState: DataState.LOADED, appData: this.dataSubject.value}),
       catchError((error: string) => {
         return of({dataState: DataState.ERROR, error})
-      }))
-
+      }),
+    );
+    this.contactEmail="";
   }
 
-  onRemove(contact: Contact) {
+  doRemove(contact: Contact) {
     this.appState$ = this.service.removeContact$(contact.email).pipe(
       map(response => {
 

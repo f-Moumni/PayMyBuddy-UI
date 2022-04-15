@@ -13,14 +13,14 @@
         [(ngModel)]="contactEmail"
         required
       />
-      <button (click)="onAddContact(contactEmail)" type="submit" class="btn  btn-success">Add</button>
+      <button (click)="doAddContact(contactEmail)" type="submit" class="btn  btn-success">Add</button>
     </div>
   </form>
 
 </div>
 <div class="space"></div>
 <ng-container *ngIf="(appState$ | async) as appState" [ngSwitch]="appState.dataState">
-  <ng-container *ngSwitchCase="DataState.LOADED">
+  <ng-container >
     <table class="table">
       <thead class="thead-dark">
       <tr>
@@ -35,7 +35,7 @@
         <td>  {{contact.firstName }}</td>
         <td> {{contact.lastName}}</td>
         <td> {{contact.email}}</td>
-        <td><a (click)="onRemove(contact)"><span class="glyphicon glyphicon-trash"></span> </a></td>
+        <td><a (click)="doRemove(contact)"><span class="glyphicon glyphicon-trash"></span> </a></td>
       </tr>
       </tbody>
     </table>
