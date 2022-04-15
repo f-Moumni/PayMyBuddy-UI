@@ -5,11 +5,8 @@
     <div class="header header-left">
         <h2 class="header2"> Welcome, <span >{{firstName}}</span>!</h2>
     </div>
-
-      <p class>your account balance is <span class="balance" >{{ balance|currency: 'EUR'}}</span></p>
-      <button type="button" class="btn btn-success">Send money</button>
-
-
+      <p class>your account balance is <span class="balance" >{{ balance| currency :'EUR'}}</span></p>
+      <button type="button" routerLink='/transfer' class="btn btn-success">Do Transaction</button>
     </div>
 
 </div>

@@ -1,10 +1,11 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../environments/environment";
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {catchError, Observable, throwError} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
 import {CustomResponse} from "../model/custom-response";
 import {Payment} from "../model/payment.model";
-import {User} from "../model/app-user.model";
+import {OperationType} from "../enum/Operation.enum";
+
 
 
 const API = environment.AUTH_API;
@@ -17,37 +18,22 @@ export class TransactionService {
   constructor(private http: HttpClient) {
   }
 
-  transactions$ = <Observable<CustomResponse>>
-    this.http.get<CustomResponse>(API + `/transactions`, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
-  Payments$ = <Observable<CustomResponse>>
-    this.http.get<CustomResponse>(API + `/payment/All`, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
-  PaymentsSent$ = <Observable<CustomResponse>>
-    this.http.get<CustomResponse>(API + `/payment/sent`, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
-  PaymentsReceived$ = <Observable<CustomResponse>>
-    this.http.get<CustomResponse>(API + `/payment/received`, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+  getTransactions(): Observable<any> {
+    return this.http.get<CustomResponse>(API + `/transactions`, httpOptions);
+  }
+  getPayments(): Observable<any> {
+    return this.http.get<CustomResponse>(API + `/payment/all`, httpOptions);
+  }
+  getTransfers(): Observable<any> {
+    return this.http.get<CustomResponse>(API + `/transfer/all`, httpOptions);
+  }
+  getPaymentsSent(): Observable<any> {
+    return this.http.get<CustomResponse>(API + `/payment/sent`, httpOptions);
+  }
+  getPaymentsReceived(): Observable<any> {
+    return this.http.get<CustomResponse>(API + `/payment/received`, httpOptions);
+  }
 
-  newPayment$ = (payment: Payment) => <Observable<CustomResponse>>
-    this.http.post<CustomResponse>(API + `/payment`,
-      {
-      creditAccountEmail: payment.creditAccountEmail,
-      amount: payment.amount,
-      description: payment.description
-    }, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
   addPayment(payment: Payment): Observable<any> {
     return this.http.post<any>(API + `/payment`,
       {
@@ -57,16 +43,17 @@ export class TransactionService {
       }, httpOptions)
   }
 
-  private // Error
-  handleError(error: HttpErrorResponse) {
-    let msg = '';
-    if (error.error instanceof ErrorEvent) {
-      // client-side error
-      msg = error.error.message;
-    } else {
-      // server-side error
-      msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    return throwError(msg);
+  filterByOperation(operationType: OperationType, response: CustomResponse) {
+    return new Observable<CustomResponse>(
+      subscriber => {
+        subscriber.next(
+          (operationType===OperationType.ALL) ? {...response } :
+            { ...response,
+              data:{transactions:response.data.transactions.filter(t=>t.operationType===operationType)
+            } }
+        )
+      }
+    );
+
   }
 }

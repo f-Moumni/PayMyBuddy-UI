@@ -1,16 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthService} from "../../service/auth-service";
 import {Router} from "@angular/router";
 import {TransactionService} from "../../service/transaction.service";
 import {ContactService} from "../../service/contact.service";
-import {catchError, map, Observable, of, startWith, take, tap} from "rxjs";
+import {BehaviorSubject, filter, map, Observable, take, tap} from "rxjs";
 import {CustomResponse} from "../../model/custom-response";
-import {DataState} from "../../enum/DataState.enum";
-import {AppState} from "../../model/app-state";
 import {Contact} from "../../model/contact.model";
 import {Payment} from "../../model/payment.model";
-import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {HttpErrorResponse} from "@angular/common/http";
+import {OperationType} from "../../enum/Operation.enum";
+import {TransactionType} from "../../enum/TransactionType";
 
 @Component({
   selector: 'app-transactions',
@@ -25,13 +24,15 @@ export class TransactionsComponent implements OnInit {
   displayReloadForm = false;
   displayBTransferForm = false;
   contactEmail!: string;
-  appState$!: Observable<AppState<CustomResponse>>;
   contacts$!: Observable<CustomResponse>;
+  transactions$!: Observable<CustomResponse>;
   selectedContact: Contact;
   payment: Payment;
   message: string;
   errorMessage: string;
-  isSuccessful: boolean ;
+  isSuccessful: boolean;
+  readonly OperationType = OperationType;
+  private dataSubject = new BehaviorSubject<CustomResponse>(null);
 
   constructor(
     private fb: FormBuilder,
@@ -65,19 +66,13 @@ export class TransactionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    /* this.appState$ = this.contactService.contacts$.pipe(
-       map(response => {
-           return {dataState: DataState.LOADED, appData: response}
-         }
-       ),
-       startWith({dataState: DataState.LOADING}),
-       catchError((error: string) => {
-         return of({dataState: DataState.ERROR, error})
-       })
-     )*/
+    this.getTransactions()
   }
 
   doDisplaySendMoney() {
+    this.errorMessage = "";
+    this.message = "";
+    this.isSuccessful = null;
     this.contacts$ = this.contactService.contacts$;
     this.sendMoneyForm.reset()
     this.displaySendMoneyForm = true;
@@ -86,6 +81,9 @@ export class TransactionsComponent implements OnInit {
   }
 
   doDisplayReload() {
+    this.errorMessage = "";
+    this.message = "";
+    this.isSuccessful = null;
     this.reloadForm.reset()
     this.displaySendMoneyForm = false;
     this.displayReloadForm = true;
@@ -93,6 +91,9 @@ export class TransactionsComponent implements OnInit {
   }
 
   doDisplayBankTransfer() {
+    this.errorMessage = "";
+    this.message = "";
+    this.isSuccessful = null;
     this.bTransferForm.reset()
     this.displaySendMoneyForm = false;
     this.displayReloadForm = false;
@@ -106,29 +107,72 @@ export class TransactionsComponent implements OnInit {
   }
 
   doPayment() {
-    this.isSuccessful = true
     this.payment = this.sendMoneyForm.value
     this.payment.creditAccountEmail = this.contactEmail
     this.transactionService.addPayment(this.payment).pipe(
       take(1),
-      tap( event=>{
+      tap(event => {
+        this.isSuccessful = true
+        this.message = event.message
+        this.getTransactions()
+      }, (err: HttpErrorResponse) => {
+        this.isSuccessful = false
+        this.errorMessage = err.error.message
+      })).subscribe();
 
-      },
-        (err: any) => {
-          if (err instanceof HttpErrorResponse) {
-            this.isSuccessful = false;
-            this.errorMessage = err.error.message
-          }
-        })
-    ).subscribe()
-    if (this.isSuccessful == true) {
-      this.displaySendMoneyForm = false
+  }
 
-    }
+  getTransactions() {
+    this.transactions$ = this.transactionService.getTransactions()
+
   }
 
   onChange(contact: Contact) {
     this.contactEmail = contact.email;
     console.log(this.contactEmail)
   }
+
+  doFilterByTransaction(transactionType:TransactionType): void{
+    switch(transactionType) {
+      case transactionType=TransactionType.ALL: {
+        this.transactions$ = this.transactionService.getTransactions().pipe(
+          tap(response => {
+            this.dataSubject.next(response);
+          }
+        ))
+
+        break;
+      }
+      case transactionType=TransactionType.TRANSFER: {
+        this.transactions$ = this.transactionService.getTransfers().pipe(
+          tap(response => {
+              this.dataSubject.next(response);
+            }
+          ))
+        break;
+      }
+      case transactionType=TransactionType.PAYMENT: {
+        this.transactions$ = this.transactionService.getPayments().pipe(
+          tap(response => {
+              this.dataSubject.next(response);
+            }
+          ))
+        break;
+      }
+      default: {
+        this.transactions$ = this.transactionService.getTransactions().pipe(
+          tap(response => {
+              this.dataSubject.next(response);
+            }
+          ))
+        break;
+      }
+    }
+  }
+  doFilterByOperation(operationType: OperationType){
+    this.transactions$= this.transactionService.filterByOperation(operationType,this.dataSubject.value)
+
+  }
+
 }
+

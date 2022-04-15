@@ -1,7 +1,9 @@
-import { NgModule } from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { registerLocaleData } from '@angular/common';
+import * as fr from '@angular/common/locales/fr';
 import { AppComponent } from './app.component';
+
 import { HeaderComponent } from './component/header/header.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -14,6 +16,7 @@ import { HomeComponent } from './component/home/home.component';
 
 import { ContactsComponent } from './component/contacts/contacts.component';
 import { TransactionsComponent } from './component/transactions/transactions.component';
+
 
 @NgModule({
   declarations: [
@@ -38,7 +41,14 @@ import { TransactionsComponent } from './component/transactions/transactions.com
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true
-  }],
+  },
+    { provide: LOCALE_ID,
+      useValue: 'fr-FR'}
+    ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    registerLocaleData(fr.default);
+  }
+}

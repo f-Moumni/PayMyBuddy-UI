@@ -1,31 +1,17 @@
 <app-header></app-header>
 <ng-container>
   <!--nav bar for operations chose -->
-  <ng-container>
-    <nav class="navbar fixed-top navbar-expand-md navbar-new-bottom">
-      <div class="navbar-collapse collapse pt-2 pt-md-0" id="navbar2">
-        <ul class="nav navbar-nav  ">
-          <li class=" nav-item ">
-            <a (click)="doDisplaySendMoney()" class="nav-link">Send Money</a>
-          </li>
-          <li class=" nav-item">
-            <a (click)="doDisplayReload()" class="nav-link">Reload</a>
-          </li>
-          <li class=" nav-item">
-            <a (click)="doDisplayBankTransfer()" class="nav-link">Bank Transfer</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </ng-container>
+
   <!--form for end money -->
-  <ng-container *ngIf="displaySendMoneyForm==true && (contacts$ | async) as contacts " >
+  <ng-container *ngIf="displaySendMoneyForm==true && (contacts$ | async) as contacts ">
     <div class="box send-money">
       <form class="formContent" [formGroup]="sendMoneyForm">
         <div class="form-group">
           <label>Contacts</label>
-          <select  class="form-control" [(ngModel)]="selectedContact" (ngModelChange)="onChange($event)" [ngModelOptions]="{standalone: true}"required>
-            <option *ngFor="let contact of contacts.data.contacts " [ngValue]="contact" > {{contact.firstName}} {{contact.lastName}}</option>
+          <select class="form-control" [(ngModel)]="selectedContact" (ngModelChange)="onChange($event)"
+                  [ngModelOptions]="{standalone: true}" required>
+            <option *ngFor="let contact of contacts.data.contacts "
+                    [ngValue]="contact"> {{contact.firstName}} {{contact.lastName}}</option>
           </select>
         </div>
         <div class="form-group" required>
@@ -34,39 +20,24 @@
         </div>
         <div class="form-group">
           <label>Description</label>
-          <textarea formControlName="description" class="form-control" rows="3"></textarea>
+          <textarea formControlName="description" class="form-control" rows="3" required></textarea>
         </div>
         <div class="btn-from">
-          <button  (click)="doPayment()" type="submit" class="btn btn-success" [disabled]="sendMoneyForm.invalid">Send</button>
+          <button (click)="doPayment()" type="submit" class="btn btn-success" [disabled]="sendMoneyForm.invalid">Send
+          </button>
           <button (click)="doCancel()" type="reset" class="btn  btn-warning">Cancel</button>
         </div>
-        <div  *ngIf="isSuccessful==false" class="alert alert-danger mt-1 box"  role="alert">
+        <div *ngIf="isSuccessful===false" class="alert alert-danger mt-1 box" role="alert">
           <h4 class="alert-heading">Error!</h4>
           {{errorMessage}}
         </div>
+        <div *ngIf="isSuccessful===true" class="alert alert-success mt-1 box" role="alert">
+          <h4 class="alert-heading">Success!</h4>
+          {{message}}
+        </div>
       </form>
     </div>
   </ng-container>
-  <ng-container *ngIf="displayReloadForm==true ">
-    <div class="box reload">
-      <form class="formContent" [formGroup]="reloadForm">
-        <div class="form-group" required>
-          <label>Amount</label>
-          <input type="number" class="form-control" placeholder="0.00 €">
-        </div>
-        <div class="form-group">
-          <label>Description</label>
-          <textarea class="form-control" rows="3"></textarea>
-        </div>
-        <div class="btn-from">
-          <button type="submit" class="btn btn-success" [disabled]="reloadForm.invalid">Reload</button>
-          <button (click)="doCancel()" type="reset" class="btn  btn-warning">Cancel</button>
-        </div>
-
-      </form>
-    </div>
-  </ng-container>
-
   <ng-container *ngIf="displayBTransferForm==true">
     <div class="box bankTransfer">
       <form class="formContent" [formGroup]="bTransferForm">
@@ -94,48 +65,48 @@
     <div class="con">
       <nav class="navbar navbar-inverse">
         <div class="container-fluid">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown "><a class="dropdown-toggle" data-toggle="dropdown" href="#">ALL <span
-              class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Page 1-1</a></li>
-                    <li><a href="#">Page 1-1</a></li>
-                    <li><a href="#">Page 1-2</a></li>
-                  </ul>
-                </li>
-                <li><a href="#">Page 1-2</a></li>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Page 1-1</a></li>
-                  <li><a href="#">Page 1-2</a></li>
-                </ul>
-              </ul>
-            </li>
-          </ul>
+            <span class="nav navbar-nav navbar-right">
+                <select (ngModelChange)="doFilterByTransaction($event)" name="transactionType" class="btn btn-success "
+                        ngModel="ALL">
+                    <!--filter by transaction Type-->
+                       <option value="ALL">ALL</option>
+                      <option value="PAYMENT">Payment</option>
+                      <option value="TRANSFER">Bank Transfer</option>
+                </select>
+                 <select (ngModelChange)="doFilterByOperation($event)" name="operationType" class="btn btn-success "
+                         ngModel="ALL">
+                    <!--filter by operation Type-->
+                      <option value="ALL">ALL</option>
+                      <option value="DEBIT">Negative </option>
+                      <option value="CREDIT">Positive</option>
+                  </select>
+            </span>
+          <span class="nav navbar-nav navbar-left">
+                  <button class="btn btn-success " (click)="doDisplaySendMoney()"> Send Money</button>
+                 <button class="btn btn-success " (click)="doDisplayBankTransfer()"> New Bank Transfer</button>
+            </span>
         </div>
       </nav>
-      <table class="table table-hover">
+      <table class="table table-hover" *ngIf="(transactions$ | async) as transactions">
         <thead>
         <tr>
           <th>Name</th>
           <th>Description</th>
-          <th>Date</th>
+          <th>Date - Hour</th>
           <th>Amount</th>
-          <th><span class="glyphicon glyphicon-arrow-left"></span><span class=" glyphicon glyphicon-arrow-right"></span>
-          </th>
+          <th></th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>le nom</td>
-          <td class="description">cinéma pour alex</td>
-          <td>241022</td>
-          <td>john@example.com</td>
-          <th><span class="glyphicon glyphicon-arrow-left left"></span><span
-            class=" glyphicon glyphicon-arrow-right .text-danger"></span></th>
+        <tr *ngFor="let transaction of transactions.data.transactions">
+          <td>{{transaction.name }}</td>
+          <td class="description">{{transaction.description }}</td>
+          <td>{{transaction.dateTime | date: 'dd/MM/yy - HH:mm'}}</td>
+          <td>{{transaction.amount | currency:'EUR'}} </td>
+          <td><span class="glyphicon"
+                    [ngClass]="[transaction.operationType===OperationType.DEBIT ? '  glyphicon-arrow-right' :' glyphicon-arrow-left' ]"></span>
+          </td>
         </tr>
-
         </tbody>
       </table>
     </div>
