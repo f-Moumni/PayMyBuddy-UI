@@ -6,6 +6,7 @@ import {CustomResponse} from "../model/custom-response";
 import {Payment} from "../model/payment.model";
 import {OperationType} from "../enum/Operation.enum";
 import {Transaction} from "../model/transaction.model";
+import {Transfer} from "../model/transfer.model";
 
 
 
@@ -49,5 +50,12 @@ export class TransactionService {
       }
 
 
-
+  addTransfer(transfer: Transfer):Observable<any> {
+    return this.http.post<any>(API + `/transfer`,
+      {
+        amount: transfer.amount,
+        description: transfer.description,
+        operationType: transfer.operationType
+      }, httpOptions)
+  }
 }

@@ -13,6 +13,8 @@ import {TransactionType} from "../../enum/TransactionType";
 import {Transaction} from "../../model/transaction.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
+import {BankService} from "../../service/bank.service";
+import {Transfer} from "../../model/transfer.model";
 
 @Component({
   selector: 'app-transactions',
@@ -26,13 +28,16 @@ export class TransactionsComponent implements OnInit , AfterViewInit {
   displayReloadForm = false;
   displayBTransferForm = false;
   contactEmail!: string;
+  iban!:string;
   contacts$!: Observable<CustomResponse>;
   transactions$!: Observable<MatTableDataSource<Transaction>>;
   selectedContact: Contact;
   payment: Payment;
+  transfer:Transfer;
   message: string;
   errorMessage: string;
   isSuccessful: boolean;
+  isLoaded: boolean;
   readonly OperationType = OperationType;
   private dataSubject = new BehaviorSubject<Transaction[]>(null);
 
@@ -45,20 +50,21 @@ export class TransactionsComponent implements OnInit , AfterViewInit {
     private fb: FormBuilder,
     private transactionService: TransactionService,
     private contactService: ContactService,
+    private bankService : BankService,
     private router: Router
   ) {
     this.sendMoneyForm = this.fb.group({
       amount: [0,
         Validators.required,
       ],
-      description: [""],
+      description: ["",  Validators.required,
+      ],
 
     });
     this.bTransferForm = this.fb.group({
-      amountBTransfer: [0,
-        Validators.required,
-      ],
-      descriptionBTransfer: [""],
+      operationType :[null,Validators.required],
+      amount: [0, Validators.required],
+      description: ["",  Validators.required],
 
     });
 
@@ -85,6 +91,7 @@ export class TransactionsComponent implements OnInit , AfterViewInit {
     this.message = "";
     this.isSuccessful = null;
     this.bTransferForm.reset()
+    this.getIban();
     this.displaySendMoneyForm = false;
     this.displayReloadForm = false;
     this.displayBTransferForm = true;
@@ -109,9 +116,31 @@ export class TransactionsComponent implements OnInit , AfterViewInit {
         this.isSuccessful = false
         this.errorMessage = err.error.message
       })).subscribe();
-
   }
-
+getIban(){
+    this.bankService.getBankAccount().pipe(
+      take(1),
+      tap(event => {
+        this. isLoaded = true
+       this.iban = event.data.bankAccount.iban;
+      }, (err: HttpErrorResponse) => {
+        this. isLoaded = false
+      })).subscribe();
+}
+  doTransfer() {
+    this.transfer = this.bTransferForm.value
+   // this.payment.creditAccountEmail = this.contactEmail
+    this.transactionService.addTransfer(this.transfer).pipe(
+      take(1),
+      tap(event => {
+        this.isSuccessful = true
+        this.message = event.message
+        this.getTransactions()
+      }, (err: HttpErrorResponse) => {
+        this.isSuccessful = false
+        this.errorMessage = err.error.message
+      })).subscribe();
+  }
   getTransactions() {
     this.transactions$ = this.transactionService.getTransactions().pipe(
       map( response => {

@@ -1,7 +1,7 @@
-import {Operation} from "../enum/Operation.enum";
+import { OperationType} from "../enum/Operation.enum";
 
-export class transfer {
+export class Transfer {
   amount!: number;
   description!: string;
-  operationType!:Operation;
+  operationType!:OperationType;
 }
