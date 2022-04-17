@@ -16,6 +16,12 @@ import { HomeComponent } from './component/home/home.component';
 
 import { ContactsComponent } from './component/contacts/contacts.component';
 import { TransactionsComponent } from './component/transactions/transactions.component';
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatTableModule} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatInputModule} from "@angular/material/input";
 
 
 @NgModule({
@@ -35,7 +41,14 @@ import { TransactionsComponent } from './component/transactions/transactions.com
     HttpClientModule,
     FormsModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    BrowserAnimationsModule,
+    BrowserModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {TransactionService} from "../../service/transaction.service";
@@ -10,29 +10,36 @@ import {Payment} from "../../model/payment.model";
 import {HttpErrorResponse} from "@angular/common/http";
 import {OperationType} from "../../enum/Operation.enum";
 import {TransactionType} from "../../enum/TransactionType";
+import {Transaction} from "../../model/transaction.model";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-transactions',
   templateUrl: './transactions.component.html',
   styleUrls: ['./transactions.component.css']
 })
-export class TransactionsComponent implements OnInit {
+export class TransactionsComponent implements OnInit , AfterViewInit {
   sendMoneyForm: FormGroup;
-  reloadForm: FormGroup;
   bTransferForm: FormGroup;
   displaySendMoneyForm = false;
   displayReloadForm = false;
   displayBTransferForm = false;
   contactEmail!: string;
   contacts$!: Observable<CustomResponse>;
-  transactions$!: Observable<CustomResponse>;
+  transactions$!: Observable<MatTableDataSource<Transaction>>;
   selectedContact: Contact;
   payment: Payment;
   message: string;
   errorMessage: string;
   isSuccessful: boolean;
   readonly OperationType = OperationType;
-  private dataSubject = new BehaviorSubject<CustomResponse>(null);
+  private dataSubject = new BehaviorSubject<Transaction[]>(null);
+
+  dataSource: MatTableDataSource<Transaction>;
+  displayedColumns: string[] = ['name', 'description', 'date-Hour', 'amount','operationType'];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
 
   constructor(
     private fb: FormBuilder,
@@ -41,18 +48,10 @@ export class TransactionsComponent implements OnInit {
     private router: Router
   ) {
     this.sendMoneyForm = this.fb.group({
-
       amount: [0,
         Validators.required,
       ],
       description: [""],
-
-    });
-    this.reloadForm = this.fb.group({
-      amountReload: [0,
-        Validators.required,
-      ],
-      descriptionReload: [""],
 
     });
     this.bTransferForm = this.fb.group({
@@ -64,6 +63,7 @@ export class TransactionsComponent implements OnInit {
     });
 
   }
+
 
   ngOnInit(): void {
     this.getTransactions()
@@ -77,16 +77,6 @@ export class TransactionsComponent implements OnInit {
     this.sendMoneyForm.reset()
     this.displaySendMoneyForm = true;
     this.displayReloadForm = false;
-    this.displayBTransferForm = false;
-  }
-
-  doDisplayReload() {
-    this.errorMessage = "";
-    this.message = "";
-    this.isSuccessful = null;
-    this.reloadForm.reset()
-    this.displaySendMoneyForm = false;
-    this.displayReloadForm = true;
     this.displayBTransferForm = false;
   }
 
@@ -123,7 +113,13 @@ export class TransactionsComponent implements OnInit {
   }
 
   getTransactions() {
-    this.transactions$ = this.transactionService.getTransactions()
+    this.transactions$ = this.transactionService.getTransactions().pipe(
+      map( response => {
+     this.dataSource = new MatTableDataSource<Transaction>(response.data.transactions);
+        this.dataSource.paginator = this.paginator;
+        return this.dataSource
+      })
+    )
 
   }
 
@@ -137,42 +133,70 @@ export class TransactionsComponent implements OnInit {
       case transactionType=TransactionType.ALL: {
         this.transactions$ = this.transactionService.getTransactions().pipe(
           tap(response => {
-            this.dataSubject.next(response);
-          }
-        ))
-
+          this.dataSubject.next(response.data.transactions);
+          }),
+          map( response => {
+            this.dataSource = new MatTableDataSource<Transaction>(response.data.transactions);
+            this.dataSource.paginator = this.paginator;
+            return this.dataSource
+          },
+        )
+          );
         break;
       }
       case transactionType=TransactionType.TRANSFER: {
         this.transactions$ = this.transactionService.getTransfers().pipe(
           tap(response => {
-              this.dataSubject.next(response);
-            }
-          ))
+              this.dataSubject.next(response.data.transactions);
+            }),
+          map( response => {
+            this.dataSource = new MatTableDataSource<Transaction>(response.data.transactions);
+            this.dataSource.paginator = this.paginator;
+            return this.dataSource
+          }
+        ));
         break;
       }
       case transactionType=TransactionType.PAYMENT: {
         this.transactions$ = this.transactionService.getPayments().pipe(
           tap(response => {
-              this.dataSubject.next(response);
+              this.dataSubject.next(response.data.transactions);
             }
-          ))
+          ),
+          map( response => {
+            this.dataSource = new MatTableDataSource<Transaction>(response.data.transactions);
+            this.dataSource.paginator = this.paginator;
+            return this.dataSource
+          })
+        )
         break;
       }
       default: {
         this.transactions$ = this.transactionService.getTransactions().pipe(
           tap(response => {
-              this.dataSubject.next(response);
+              this.dataSubject.next(response.data.transactions);
             }
-          ))
+          ),  map( response => {
+            this.dataSource = new MatTableDataSource<Transaction>(response.data.transactions);
+            this.dataSource.paginator = this.paginator;
+            return this.dataSource
+          }))
         break;
       }
     }
   }
   doFilterByOperation(operationType: OperationType){
-    this.transactions$= this.transactionService.filterByOperation(operationType,this.dataSubject.value)
+    this.transactions$= this.transactionService.filterByOperation(operationType,this.dataSubject.value).pipe(
+      map( response => {
+        this.dataSource = new MatTableDataSource<Transaction>(response);
+        this.dataSource.paginator = this.paginator;
+        return this.dataSource
+      })
+    )
 
   }
-
+  ngAfterViewInit() {
+    //  this.dataSource.paginator = this.paginator;
+  }
 }
 

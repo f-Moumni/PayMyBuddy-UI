@@ -2,8 +2,11 @@
   height: 5vh;
 }
 th {
-  background-color: #5bb75c;
+  background-color: #090909;
   color: white;
+  height: 40px;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: 400;
 }
 .form-contact{
 margin: 30px 5px;

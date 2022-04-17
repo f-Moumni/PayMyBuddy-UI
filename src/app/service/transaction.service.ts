@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {CustomResponse} from "../model/custom-response";
 import {Payment} from "../model/payment.model";
 import {OperationType} from "../enum/Operation.enum";
+import {Transaction} from "../model/transaction.model";
 
 
 
@@ -27,12 +28,6 @@ export class TransactionService {
   getTransfers(): Observable<any> {
     return this.http.get<CustomResponse>(API + `/transfer/all`, httpOptions);
   }
-  getPaymentsSent(): Observable<any> {
-    return this.http.get<CustomResponse>(API + `/payment/sent`, httpOptions);
-  }
-  getPaymentsReceived(): Observable<any> {
-    return this.http.get<CustomResponse>(API + `/payment/received`, httpOptions);
-  }
 
   addPayment(payment: Payment): Observable<any> {
     return this.http.post<any>(API + `/payment`,
@@ -43,17 +38,16 @@ export class TransactionService {
       }, httpOptions)
   }
 
-  filterByOperation(operationType: OperationType, response: CustomResponse) {
-    return new Observable<CustomResponse>(
+  filterByOperation(operationType: OperationType, response: Transaction[]) {
+    return new Observable<Transaction[]>(
       subscriber => {
         subscriber.next(
-          (operationType===OperationType.ALL) ? {...response } :
-            { ...response,
-              data:{transactions:response.data.transactions.filter(t=>t.operationType===operationType)
-            } }
+          (operationType===OperationType.ALL) ?  response  :
+             response.filter(t=>t.operationType===operationType))
+             }
         )
       }
-    );
 
-  }
+
+
 }

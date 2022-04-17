@@ -27,11 +27,11 @@
           </button>
           <button (click)="doCancel()" type="reset" class="btn  btn-warning">Cancel</button>
         </div>
-        <div *ngIf="isSuccessful===false" class="alert alert-danger mt-1 box" role="alert">
+        <div *ngIf="isSuccessful===false" class="alert alert-danger mt-1 error-box" role="alert">
           <h4 class="alert-heading">Error!</h4>
           {{errorMessage}}
         </div>
-        <div *ngIf="isSuccessful===true" class="alert alert-success mt-1 box" role="alert">
+        <div *ngIf="isSuccessful===true" class="alert alert-success mt-1 error-box" role="alert">
           <h4 class="alert-heading">Success!</h4>
           {{message}}
         </div>
@@ -62,53 +62,66 @@
     </div>
   </ng-container>
   <ng-container>
-    <div class="con">
+    <div class="transaction-view">
       <nav class="navbar navbar-inverse">
         <div class="container-fluid">
-            <span class="nav navbar-nav navbar-right">
-                <select (ngModelChange)="doFilterByTransaction($event)" name="transactionType" class="btn btn-success "
-                        ngModel="ALL">
-                    <!--filter by transaction Type-->
-                       <option value="ALL">ALL</option>
-                      <option value="PAYMENT">Payment</option>
-                      <option value="TRANSFER">Bank Transfer</option>
-                </select>
-                 <select (ngModelChange)="doFilterByOperation($event)" name="operationType" class="btn btn-success "
-                         ngModel="ALL">
-                    <!--filter by operation Type-->
-                      <option value="ALL">ALL</option>
-                      <option value="DEBIT">Negative </option>
-                      <option value="CREDIT">Positive</option>
+              <span class="nav navbar-nav navbar-right">
+                  <select (ngModelChange)="doFilterByTransaction($event)" name="transactionType"
+                          class="btn btn-success "
+                          ngModel="ALL">
+                      <!--filter by transaction Type-->
+                         <option value="ALL">ALL</option>
+                        <option value="PAYMENT">Payment</option>
+                        <option value="TRANSFER">Bank Transfer</option>
                   </select>
-            </span>
+                   <select (ngModelChange)="doFilterByOperation($event)" name="operationType" class="btn btn-success "
+                           ngModel="ALL">
+                      <!--filter by operation Type-->
+                        <option value="ALL">ALL</option>
+                        <option value="DEBIT">Negative </option>
+                        <option value="CREDIT">Positive</option>
+                    </select>
+              </span>
           <span class="nav navbar-nav navbar-left">
-                  <button class="btn btn-success " (click)="doDisplaySendMoney()"> Send Money</button>
-                 <button class="btn btn-success " (click)="doDisplayBankTransfer()"> New Bank Transfer</button>
-            </span>
+                    <button class="btn btn-success " (click)="doDisplaySendMoney()"> Send Money</button>
+                   <button class="btn btn-success " (click)="doDisplayBankTransfer()"> New Bank Transfer</button>
+              </span>
         </div>
       </nav>
-      <table class="table table-hover" *ngIf="(transactions$ | async) as transactions">
-        <thead>
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Date - Hour</th>
-          <th>Amount</th>
-          <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let transaction of transactions.data.transactions">
-          <td>{{transaction.name }}</td>
-          <td class="description">{{transaction.description }}</td>
-          <td>{{transaction.dateTime | date: 'dd/MM/yy - HH:mm'}}</td>
-          <td>{{transaction.amount | currency:'EUR'}} </td>
-          <td><span class="glyphicon"
-                    [ngClass]="[transaction.operationType===OperationType.DEBIT ? '  glyphicon-arrow-right' :' glyphicon-arrow-left' ]"></span>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+      <div class="">
+        <table class="table table-hover" mat-table [dataSource]="transactions$ | async">
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name. </th>
+            <td mat-cell *matCellDef="let transaction"> {{transaction.name}} </td>
+          </ng-container>
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef> Description. </th>
+            <td mat-cell *matCellDef="let transaction"> {{transaction.description}} </td>
+          </ng-container>
+          <ng-container matColumnDef="date-Hour">
+            <th mat-header-cell *matHeaderCellDef> Date - Hour. </th>
+            <td mat-cell *matCellDef="let transaction"> {{transaction.dateTime | date: 'dd/MM/yy - HH:mm'}} </td>
+          </ng-container>
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef> Amount. </th>
+            <td mat-cell *matCellDef="let transaction"> {{transaction.amount | currency :'EUR'}} </td>
+          </ng-container>
+          <ng-container matColumnDef="operationType">
+            <th mat-header-cell *matHeaderCellDef>   </th>
+            <td mat-cell *matCellDef="let transaction" > <span class="glyphicon"
+                                                               [ngClass]="[transaction.operationType===OperationType.DEBIT ? '  glyphicon-arrow-right' :' glyphicon-arrow-left' ]"></span> </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator
+         [pageSizeOptions]="[5, 10, 20]"
+          showFirstLastButtons
+          aria-label="Select page of periodic elements">jj
+        </mat-paginator>
+      </div>
     </div>
   </ng-container>
 </ng-container>
