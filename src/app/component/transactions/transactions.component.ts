@@ -69,7 +69,9 @@ export class TransactionsComponent implements OnInit , AfterViewInit {
     });
 
   }
-
+goBankAccount(): void{
+    this.router.navigate(['bank-account'])
+}
 
   ngOnInit(): void {
     this.getTransactions()

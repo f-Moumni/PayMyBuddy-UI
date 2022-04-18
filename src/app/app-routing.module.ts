@@ -6,6 +6,7 @@ import {UserProfileComponent} from "./component/user-profile/user-profile.compon
 import {HomeComponent} from "./component/home/home.component";
 import {ContactsComponent} from "./component/contacts/contacts.component";
 import {TransactionsComponent} from "./component/transactions/transactions.component";
+import {BankAccountComponent} from "./component/bank-account/bank-account.component";
 
 
 const routes: Routes = [
@@ -13,9 +14,10 @@ const routes: Routes = [
   { path: '', redirectTo:'login' ,pathMatch: 'full' },
   {path: 'register', component: RegistrationComponent},
   {path: 'contacts', component: ContactsComponent},
-  {path :'user-profile' ,component :UserProfileComponent,canActivate:[]},
+  {path :'user-profile' ,component :UserProfileComponent},
   {path :'home' ,component :HomeComponent,canActivate:[]},
-  {path :'transfer' ,component :TransactionsComponent,canActivate:[]}
+  {path :'transfer' ,component :TransactionsComponent,canActivate:[]},
+  {path :'bank-account' ,component :BankAccountComponent,canActivate:[]}
 ];
 
 @NgModule({
