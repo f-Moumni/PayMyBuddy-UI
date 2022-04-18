@@ -81,7 +81,7 @@
     <div class="formContent " >
     <p  class="alert">you have no registered bank account, please add it ; </p>
       <div class="btn-from">
-        <button type="button" routerLink='/transfer' class="btn btn-success" style="width: 150px"><span class="glyphicon glyphicon-plus"></span> Bank Account</button>
+        <button type="button" (click)="goBankAccount()" class="btn btn-success" style="width: 150px"><span class="glyphicon glyphicon-plus"></span> Bank Account</button>
       <button (click)="doCancel()" type="reset" class="btn  btn-warning">Cancel</button>
       </div>
     </div>

@@ -1,0 +1,29 @@
+<app-header></app-header>
+<div class="box  container-fluid">
+  <form class="formContent" [formGroup]="bTransferForm">
+
+    <div class="form-group" required>
+      <label>IBAN</label>
+      <input type="text" class="form-control"  formControlName  ="iban"  placeholder="IBAN"  required>
+    </div>
+    <div class="form-group" required>
+      <label>SWIFT</label>
+      <input type="text" class="form-control" formControlName  ="swift" placeholder="SWIFT" required>
+    </div>
+
+    <div class="btn-from">
+      <button type="submit"  *ngIf=" isLoaded ===false" class="btn btn-success" (click)="doSaveBA()" [disabled]="bTransferForm.invalid"> Save </button>
+      <button type="submit"  *ngIf=" isLoaded ===true" class="btn btn-success" (click)="doUpdateBA()" [disabled]="bTransferForm.invalid"> Update</button>
+      <button (click)="doReset()" type="reset" class="btn  btn-warning">Reset</button>
+    </div>
+    <div *ngIf="isSuccessful===false" class="alert alert-danger mt-1 error-box" role="alert">
+      <h4 class="alert-heading">Error!</h4>
+      {{errorMessage}}
+    </div>
+    <div *ngIf="isSuccessful===true" class="alert alert-success mt-1 error-box" role="alert">
+      <h4 class="alert-heading">Success!</h4>
+      {{message}}
+    </div>
+
+  </form>
+</div>

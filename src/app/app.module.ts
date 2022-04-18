@@ -22,6 +22,7 @@ import {MatSortModule} from "@angular/material/sort";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatInputModule} from "@angular/material/input";
+import { BankAccountComponent } from './component/bank-account/bank-account.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import {MatInputModule} from "@angular/material/input";
     HomeComponent,
 
     ContactsComponent,
-    TransactionsComponent
+    TransactionsComponent,
+    BankAccountComponent
   ],
   imports: [
     BrowserModule,
