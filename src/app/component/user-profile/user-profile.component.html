@@ -1,1 +1,75 @@
 <app-header></app-header>
+<div class="form-card">
+
+  <form [formGroup]="profileForm">
+    <h3 class="h3 mb-3 font-weight-normal text-center">Profile</h3>
+    <div class="form-group">
+      <div class="btn-from">
+      <label>Balance </label>
+      <input
+        type="text"
+        formControlName=balance
+        readonly
+        required
+      /><span>€</span>
+      </div>
+      <label>First Name *</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="firstName"
+        placeholder="Enter your first name"
+        required
+      />
+      <label>Last Name *</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="lastName"
+        placeholder="Enter your last name"
+        required
+      />
+      <label>Birthdate *</label>
+      <input
+        type="date"
+        class="form-control"
+        formControlName="birthdate"
+        placeholder="Enter your birthdate"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label>Email address *</label>
+      <input
+        type="email"
+        class="form-control"
+        formControlName="mail"
+        placeholder="Enter email"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label>Password *</label>
+      <input
+        type="password"
+        class="form-control"
+        [(ngModel)]="password" [ngModelOptions]="{standalone: true}"
+        required
+      />
+    </div>
+    <button (click)="doUpdateProfile()"  type="submit" class="btn btn-block btn-success" [disabled]="profileForm.invalid">Update</button>
+    <button   (click)="doDeleteProfile()" type="button" class="btn btn-block btn-danger" >Delete Your Account</button>
+  </form>
+
+  <div  *ngIf="isSuccessful==false" class="alert alert-danger box-message"  role="alert">
+    <h4 class="alert-heading">Error!</h4>
+    {{errorMessage}}
+  </div>
+  <div  *ngIf="isSuccessful==true" class="alert alert-success box-message"  role="alert">
+    <h4 class="alert-heading">Well done!</h4>
+    {{message}}
+  </div>
+
+
+</div>
+

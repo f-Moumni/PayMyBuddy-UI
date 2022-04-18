@@ -1,0 +1,22 @@
+.form-card {
+  box-sizing: border-box;
+  width: 500px;
+  margin: 20px auto;
+  padding: 10px 30px;
+/* // box-shadow: lightgray 4px 4px 20px;*/
+}
+.btn-from{
+  margin: 20px 0;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-color: rgba(32, 79, 32, 0.06);
+}
+.btn-from input{
+  background-color: rgba(32, 79, 32, 0.06);
+  border-color: rgba(48, 100, 48, 0.14);
+}
+.box-message{
+  margin-top: 10px;
+}

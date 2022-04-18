@@ -90,7 +90,9 @@
   </ng-container>
 
   <ng-container>
+    <h3 class="h3 mb-3 font-weight-normal text-center">My Transactions</h3>
     <div class="transaction-view">
+
       <nav class="navbar navbar-inverse">
         <div class="container-fluid">
               <span class="nav navbar-nav navbar-right">
@@ -115,7 +117,8 @@
               </span>
         </div>
       </nav>
-      <div class="">
+      <div >
+
         <table class="table table-hover" mat-table [dataSource]="transactions$ | async">
 
           <ng-container matColumnDef="name">
