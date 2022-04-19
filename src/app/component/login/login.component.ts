@@ -4,6 +4,8 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../service/auth-service";
 import {Router} from "@angular/router";
 import {TokenStorageService} from "../../service/token-storge-service";
+import {take, tap} from "rxjs";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-login',
@@ -13,8 +15,9 @@ import {TokenStorageService} from "../../service/token-storge-service";
 export class LoginComponent implements OnInit {
 
   signInForm: FormGroup;
-  isLoggedIn = false;
-  isLoginFailed = false;
+  isLoggedIn :boolean;
+  errorMessage: string;
+  checked :boolean= false;
 
 
 
@@ -37,23 +40,30 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onSubmitForm(): void {
-    this.authService.login(this.signInForm.value).subscribe(
+  onLogin(): void {
+ /*   this.authService.login(this.signInForm.value).subscribe(
       data => {
         this.tokenStorage.saveToken(data.accessToken);
         this.tokenStorage.saveUser(data.mail);
         this.router.navigate([`home`])
       }
-    );
+    );*/
+    this.authService.login(this.signInForm.value).pipe(
+      take(1),
+      tap(event => {
+        this.tokenStorage.saveToken(event.accessToken,this.checked);
+        this.router.navigate([`home`])
+      }, (err: HttpErrorResponse) => {
+        this.isLoggedIn = false
+        this.errorMessage ="email and/or the password are not correct. "
+      })
+    ).subscribe();
   }
-
- /* reloadPage(): void {
-    window.location.reload();
-  }*/
-
 
 
   onSignUp() : void{
     this.router.navigateByUrl(`register`);
   }
+
+
 }

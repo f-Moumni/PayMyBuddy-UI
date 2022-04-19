@@ -13,7 +13,6 @@ import { RegistrationComponent } from './component/registration/registration.com
 import { UserProfileComponent } from './component/user-profile/user-profile.component';
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import { HomeComponent } from './component/home/home.component';
-
 import { ContactsComponent } from './component/contacts/contacts.component';
 import { TransactionsComponent } from './component/transactions/transactions.component';
 import {MatPaginatorModule} from "@angular/material/paginator";
@@ -33,7 +32,6 @@ import { BankAccountComponent } from './component/bank-account/bank-account.comp
     RegistrationComponent,
     UserProfileComponent,
     HomeComponent,
-
     ContactsComponent,
     TransactionsComponent,
     BankAccountComponent

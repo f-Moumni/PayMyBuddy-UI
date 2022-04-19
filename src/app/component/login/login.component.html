@@ -9,7 +9,7 @@
     </div>
 
     <!-- Login Form -->
-    <form (ngSubmit)="onSubmitForm()" [formGroup]="signInForm">
+    <form (ngSubmit)="onLogin()" [formGroup]="signInForm">
       <input type="email"
              id="login"
              class="fadeIn second"
@@ -23,7 +23,7 @@
       <div class="checkbox">
         <label>
           <input type="checkbox"
-                 name="remember"> Remember Me
+                 name="remember" [(ngModel)]="checked" [ngModelOptions]="{standalone: true}"> Remember Me
         </label>
       </div>
       <input type="submit"
@@ -35,5 +35,9 @@
              class="fadeIn fourth"
              value="Sign UP">
     </form>
+    <div  *ngIf="isLoggedIn===false" class="alert alert-danger box-message"  role="alert">
+      <h4 class="alert-heading">Error!</h4>
+      {{errorMessage}}
+    </div>
   </div>
 </div>

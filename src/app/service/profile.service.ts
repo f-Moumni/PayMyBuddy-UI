@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {BankAccount} from "../model/bankAccount.model";
+
 import {Observable} from "rxjs";
 import {User} from "../model/app-user.model";
 import {environment} from "../../environments/environment";

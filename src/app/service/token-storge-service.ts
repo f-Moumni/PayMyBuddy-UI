@@ -15,19 +15,23 @@ export class TokenStorageService {
     window.sessionStorage.clear();
   }
 
-  public saveToken(token: string): void {
+  public saveToken(token: string, rememberMe: boolean): void {
     window.sessionStorage.removeItem(TOKEN_KEY);
-    window.sessionStorage.setItem(TOKEN_KEY, token);
+    window.localStorage.removeItem(TOKEN_KEY);
+    if(rememberMe===false){
+      window.sessionStorage.setItem(TOKEN_KEY, token);
+    }else {
+      window.localStorage.setItem(TOKEN_KEY, token);
+    }
+
   }
 
   public getToken(): string {
-
     // @ts-ignore
-    return sessionStorage.getItem(TOKEN_KEY);
+    return (sessionStorage.getItem(TOKEN_KEY)===null)?localStorage.getItem(TOKEN_KEY):sessionStorage.getItem(TOKEN_KEY);
   }
   public removeToken(): void {
-
-    return sessionStorage.removeItem(TOKEN_KEY);
+    return sessionStorage.removeItem(TOKEN_KEY)
   }
 
   public saveUser(mail:string): void {
