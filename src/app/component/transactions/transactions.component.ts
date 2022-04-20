@@ -81,7 +81,7 @@ goBankAccount(): void{
     this.errorMessage = "";
     this.message = "";
     this.isSuccessful = null;
-    this.contacts$ = this.contactService.contacts$;
+    this.contacts$ = this.contactService.getContacts();
     this.sendMoneyForm.reset()
     this.displaySendMoneyForm = true;
     this.displayReloadForm = false;

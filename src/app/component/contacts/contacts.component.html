@@ -4,7 +4,7 @@
   <form>
     <h3 class="h3 mb-3 font-weight-normal text-center">New Contact</h3>
     <div class="form-contact ">
-      <label  >Email</label>
+      <label>Email</label>
       <input
         type="email"
         class="form-control-plaintext"
@@ -18,31 +18,32 @@
   </form>
 
 </div>
-<div class="space"></div>
-<ng-container *ngIf="(appState$ | async) as appState" [ngSwitch]="appState.dataState">
-  <ng-container >
-    <table class="table">
-      <thead class="thead-dark">
-      <tr>
-        <th scope="col">First Name</th>
-        <th scope="col">Last Name</th>
-        <th scope="col">Email</th>
-        <th scope="col">Action</th>
-      </tr>
-      </thead>
-      <tbody *ngFor="let contact of appState.appData.data.contacts">
-      <tr>
-        <td>  {{contact.firstName }}</td>
-        <td> {{contact.lastName}}</td>
-        <td> {{contact.email}}</td>
-        <td><a (click)="doRemove(contact)"><span class="glyphicon glyphicon-trash"></span> </a></td>
-      </tr>
-      </tbody>
-    </table>
-  </ng-container>
-  <ng-container *ngSwitchCase="DataState.ERROR ">
-    <div class="alert alert-danger">
-      {{appState.error }}
-    </div>
-  </ng-container>
+<ng-container  *ngIf="isSuccessful==false">
+  <div class="alert alert-danger">
+    {{errorMessage }}
+  </div>
 </ng-container>
+<div class="space"></div>
+
+<ng-container>
+  <table class="table">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody *ngFor=" let contact of contacts">
+    <tr>
+      <td>  {{contact.firstName }}</td>
+      <td> {{contact.lastName}}</td>
+      <td> {{contact.email}}</td>
+      <td><a (click)="doRemove(contact)"><span class="glyphicon glyphicon-trash"></span> </a></td>
+    </tr>
+    </tbody>
+  </table>
+</ng-container>
+
+

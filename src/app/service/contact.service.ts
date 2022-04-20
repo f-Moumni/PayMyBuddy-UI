@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
-import {TokenStorageService} from "./token-storge-service";
-import {catchError, Observable, tap, throwError} from "rxjs";
-import {Contact} from "../model/contact.model";
+import {HttpClient} from "@angular/common/http";
+;
+import { Observable} from "rxjs";
+
 import {environment} from "../../environments/environment";
 import {CustomResponse} from "../model/custom-response";
 
@@ -18,45 +18,18 @@ export class ContactService {
 
   }
 
-  /*searchContact(mail: string | null):Observable<any> {
-    return this.http.get<any>(AUTH_API + `contact?mail=${mail}`,httpOptions)
-  }*/
+  public getContacts():Observable<any>{
+  return this.http.get<any>(API + `/contact/all`, httpOptions);
 
-  contacts$ = <Observable<CustomResponse>>
-    this.http.get<CustomResponse>(API + `/contact/all`,httpOptions)
-      .pipe(
-        catchError(this.handleError)
-  );
-  contact$ = (contactEmail :string) => <Observable<CustomResponse>>
-    this.http.post<CustomResponse>(API + `/contact?mail=${contactEmail}`,httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+}
+  public addContact(contactEmail :string):Observable<any>{
+  return this.http.post<any>(API + `/contact?mail=${contactEmail}`, httpOptions);
+}
 
-  removeContact$=(contactEmail :string) => <Observable<CustomResponse>>
-    this.http.delete<CustomResponse>(API + `/contact?mail=${contactEmail}`,httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
 
-  public deleteContact(contactEmail:string): Observable<any> {
-    return  this.http.delete<any>(API + `/contact?mail=${contactEmail}`,httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+  public removeContact(contactEmail :string):Observable<any>{
+    return this.http.delete<CustomResponse>(API + `/contact?mail=${contactEmail}`,httpOptions)
   }
 
 
-  private // Error
-  handleError(error: any) {
-    let msg = '';
-    if (error.error instanceof ErrorEvent) {
-      // client-side error
-      msg = error.error.message;
-    } else {
-      // server-side error
-      msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    return throwError(msg);
-  }
 }

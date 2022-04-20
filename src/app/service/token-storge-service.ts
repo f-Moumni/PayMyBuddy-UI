@@ -27,11 +27,11 @@ export class TokenStorageService {
   }
 
   public getToken(): string {
-    // @ts-ignore
+
     return (sessionStorage.getItem(TOKEN_KEY)===null)?localStorage.getItem(TOKEN_KEY):sessionStorage.getItem(TOKEN_KEY);
   }
   public removeToken(): void {
-    return sessionStorage.removeItem(TOKEN_KEY)
+    return (sessionStorage.removeItem(TOKEN_KEY)===null)?localStorage.removeItem(TOKEN_KEY):sessionStorage.removeItem(TOKEN_KEY);
   }
 
   public saveUser(mail:string): void {

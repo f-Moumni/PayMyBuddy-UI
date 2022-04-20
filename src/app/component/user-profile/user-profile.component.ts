@@ -13,13 +13,11 @@ import {User} from "../../model/app-user.model";
 })
 export class UserProfileComponent implements OnInit {
 
-
-
   message !: string;
   profileForm: FormGroup;
-   isLoaded: boolean;
+  isLoaded: boolean;
   password: string;
-   errorMessage: string;
+  errorMessage: string;
   isSuccessful: boolean;
 
   constructor(
@@ -45,7 +43,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isSuccessful=null;
+    this.isSuccessful = null;
     this.profileService.getProfile().pipe(
       take(1),
       tap(event => {
@@ -64,9 +62,11 @@ export class UserProfileComponent implements OnInit {
   }
 
   doUpdateProfile() {
-    let user :User;
+    let user: User;
     user = this.profileForm.value;
-    user.password =this.password;
+    if (this.password !== null) {
+      user.password = this.password;
+    }
     this.profileService.updateProfile(user).pipe(
       take(1),
       tap(event => {
@@ -77,12 +77,13 @@ export class UserProfileComponent implements OnInit {
         this.errorMessage = err.error.message
       })).subscribe();
   }
+
   doDeleteProfile() {
     this.profileService.deleteProfile().pipe(
       take(1),
       tap(event => {
         this.isSuccessful = true
-       this.router.navigate(['login'])
+        this.router.navigate(['login'])
       }, (err: HttpErrorResponse) => {
         this.isSuccessful = false
         this.errorMessage = err.error.message

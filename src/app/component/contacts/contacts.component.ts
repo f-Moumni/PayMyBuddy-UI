@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {TokenStorageService} from "../../service/token-storge-service";
 import {ContactService} from "../../service/contact.service";
-import {BehaviorSubject, catchError, filter, map, Observable, of, startWith, tap} from "rxjs";
-import {AppState} from "../../model/app-state";
+import {BehaviorSubject, map, Observable, take, tap} from "rxjs";
+
 import {CustomResponse} from "../../model/custom-response";
-import {DataState} from "../../enum/DataState.enum";
+
 import {Contact} from "../../model/contact.model";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-contacts',
@@ -13,60 +14,67 @@ import {Contact} from "../../model/contact.model";
   styleUrls: ['./contacts.component.css']
 })
 export class ContactsComponent implements OnInit {
-  appState$!: Observable<AppState<CustomResponse>>;
-  contacts$!: Observable<Contact[]>
+ // contact$!: Observable<CustomResponse>;
+  contacts: Contact[];
   contactEmail!: string;
-  readonly DataState = DataState;
-  private dataSubject = new BehaviorSubject<CustomResponse>(null);
+  isSuccessful: boolean;
+  dataSubject = new BehaviorSubject<Contact[]>(null);
+  errorMessage: string;
 
-  constructor(private token: TokenStorageService, private service: ContactService) {
+  constructor(private token: TokenStorageService, private contactService: ContactService) {
   }
 
   ngOnInit(): void {
-    this.appState$ = this.service.contacts$.pipe(
-      map(response => {
-          this.dataSubject.next(response);
-          return {dataState: DataState.LOADED, appData: response}
-        }
-      ),
-      startWith({dataState: DataState.LOADING}),
-      catchError((error: string) => {
-        return of({dataState: DataState.ERROR, error})
-      })
-    )
+    this.getContacts();
 
+  }
+
+  getContacts() {
+    this.contactService.getContacts().pipe(
+      take(1),
+      map(response => {
+        this.contacts=response.data.contacts;
+        this.dataSubject.next( response.data.contacts);
+        return response.data.contacts
+      })
+    ).subscribe()
   }
 
   doAddContact(email: string) {
-    this.appState$ = this.service.contact$(email).pipe(
-      map(response => {
-          this.dataSubject.next(
-            {...response, data: {contacts: [...this.dataSubject.value.data.contacts, response.data.contact]}}
-          );
-          return {dataState: DataState.LOADED, appData: this.dataSubject.value}
+    this.contactService.addContact(email).pipe(
+      take(1),
+      tap(event => {
+          this.dataSubject.next([
+            ...this.dataSubject.value,event.data.contact])
+           this.contacts = this.dataSubject.value;
+          this.isSuccessful = true;
+        },
+        (err: HttpErrorResponse) =>{
+          this.isSuccessful = false;
+          this.errorMessage = err.error.message
         }
-      ),
-      startWith({dataState: DataState.LOADED, appData: this.dataSubject.value}),
-      catchError((error: string) => {
-        return of({dataState: DataState.ERROR, error})
-      }),
-    );
-    this.contactEmail="";
+      )
+    ).subscribe()
+    //this.contacts$=this.dataSubject.value;
+    this.contactEmail = "";
   }
 
   doRemove(contact: Contact) {
-    this.appState$ = this.service.removeContact$(contact.email).pipe(
-      map(response => {
-
-          this.dataSubject.next(
-            {...response, data: {contacts: this.dataSubject.value.data.contacts.filter(c => c.email !== contact.email)}}
-          );
-          return {dataState: DataState.LOADED, appData: this.dataSubject.value}
+    this.contactService.removeContact(contact.email).pipe(
+      take(1),
+      tap(event => {
+          this.dataSubject.next([
+            ...this.dataSubject.value.filter((c => c.email !== contact.email))]
+          )
+          this.contacts = this.dataSubject.value;
+          this.isSuccessful = true;
+        },
+        (err: HttpErrorResponse) =>{
+          this.isSuccessful = false;
+          this.errorMessage = err.error.message
         }
-      ),
-      startWith({dataState: DataState.LOADED, appData: this.dataSubject.value}),
-      catchError((error: string) => {
-        return of({dataState: DataState.ERROR, error})
-      }))
+      )
+    ).subscribe()
+    this.getContacts();
   }
 }
