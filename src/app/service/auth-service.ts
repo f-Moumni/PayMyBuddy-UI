@@ -13,7 +13,7 @@ const httpOptions =environment.httpOptions
   providedIn: 'root'
 })
 export class AuthService {
-  isSuccessful = false;
+public static  authenticated = false;
   isSignUpFailed = false;
   errorMessage = '';
   constructor(private http: HttpClient) { }
@@ -35,18 +35,7 @@ export class AuthService {
     }
     , httpOptions);
   }
-  // Error
-  handleError(error: HttpErrorResponse) {
-    let msg = '';
-    if (error.error instanceof ErrorEvent) {
-      // client-side error
-      msg = error.error.message;
-    } else {
-      // server-side error
-      msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    return throwError(msg);
-  }
+
 
   getUserProfile():Observable<CustomResponse> {
     return this.http.get<CustomResponse>(API + `/api/account`)

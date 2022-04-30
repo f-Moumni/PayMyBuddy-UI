@@ -7,6 +7,8 @@ import {CustomResponse} from "../../model/custom-response";
 
 import {Contact} from "../../model/contact.model";
 import {HttpErrorResponse} from "@angular/common/http";
+import {AuthService} from "../../service/auth-service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-contacts',
@@ -14,19 +16,23 @@ import {HttpErrorResponse} from "@angular/common/http";
   styleUrls: ['./contacts.component.css']
 })
 export class ContactsComponent implements OnInit {
- // contact$!: Observable<CustomResponse>;
+
   contacts: Contact[];
   contactEmail!: string;
   isSuccessful: boolean;
   dataSubject = new BehaviorSubject<Contact[]>(null);
   errorMessage: string;
 
-  constructor(private token: TokenStorageService, private contactService: ContactService) {
+  constructor(private router :Router ,
+              private token: TokenStorageService
+              , private contactService: ContactService) {
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void { if (AuthService.authenticated){
     this.getContacts();
-
+  }else {
+    this.router.navigate(['login'])
+  }
   }
 
   getContacts() {
@@ -55,7 +61,6 @@ export class ContactsComponent implements OnInit {
         }
       )
     ).subscribe()
-    //this.contacts$=this.dataSubject.value;
     this.contactEmail = "";
   }
 

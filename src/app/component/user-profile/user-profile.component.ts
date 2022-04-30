@@ -5,6 +5,7 @@ import {ProfileService} from "../../service/profile.service";
 import {take, tap} from "rxjs";
 import {HttpErrorResponse} from "@angular/common/http";
 import {User} from "../../model/app-user.model";
+import {AuthService} from "../../service/auth-service";
 
 @Component({
   selector: 'app-user-profile',
@@ -43,6 +44,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (AuthService.authenticated){
     this.isSuccessful = null;
     this.profileService.getProfile().pipe(
       take(1),
@@ -58,7 +60,7 @@ export class UserProfileComponent implements OnInit {
       }, (err: HttpErrorResponse) => {
         this.isLoaded = false
       })
-    ).subscribe();
+    ).subscribe();} else {    this.router.navigate(['login'])}
   }
 
   doUpdateProfile() {

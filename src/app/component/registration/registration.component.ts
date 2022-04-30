@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../service/auth-service";
 import {Router} from "@angular/router";
+import {take, tap} from "rxjs";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-registration',
@@ -9,10 +11,9 @@ import {Router} from "@angular/router";
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit {
-  isSuccessful = false;
-  isSignUpFailed = false;
-  message !:string ;
+  isSuccessful: boolean;
   signupForm: FormGroup;
+  errorMessage: String;
   constructor(
     public fb: FormBuilder,
     public authService: AuthService,
@@ -35,20 +36,19 @@ export class RegistrationComponent implements OnInit {
   }
   ngOnInit() {}
   registerUser() {
-    this.authService.signUp(this.signupForm.value).subscribe(
-      data => {
-        if (data.statusCode!==201){
-          this.isSuccessful = false;
-          this.isSignUpFailed = true;
-         // this.signupForm.reset();
-        }else{
+    this.authService.signUp(this.signupForm.value).pipe(
+      take(1),
+      tap(event => {
           this.isSuccessful = true;
-          this.isSignUpFailed = false;
-          this.router.navigate([`login`])
-        } ;
-        this.message = data.message;
+      }, (err: HttpErrorResponse) => {
+         this.isSuccessful = false;
+        this.errorMessage = err.error.message;
+      })).subscribe()}
 
-    });
-  }
+
+
+
+
+
 
 }

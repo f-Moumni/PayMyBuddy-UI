@@ -51,13 +51,13 @@
     <button (click)="registerUser()" type="submit" class="btn btn-block btn-success" [disabled]="signupForm.invalid">Sign up</button>
   </form>
 
-  <div  *ngIf="isSignUpFailed==true" class="alert alert-danger mt-1"  role="alert">
+  <div  *ngIf="isSuccessful==false" class="alert alert-danger"  role="alert">
     <h4 class="alert-heading">Error!</h4>
-    {{message}}
+    {{errorMessage}}
   </div>
-  <div  *ngIf="isSuccessful==true" class="alert alert-success mt-1"  role="alert">
+  <div  *ngIf="isSuccessful==true" class="alert alert-success"  role="alert">
     <h4 class="alert-heading">Well done!</h4>
-    {{message}}
+    <P> you account has been created successfully. <a  routerLink='/login' >Log in</a></P>
   </div>
 
 

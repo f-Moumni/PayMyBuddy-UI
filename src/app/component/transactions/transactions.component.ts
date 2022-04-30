@@ -15,6 +15,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {BankService} from "../../service/bank.service";
 import {Transfer} from "../../model/transfer.model";
+import {AuthService} from "../../service/auth-service";
 
 @Component({
   selector: 'app-transactions',
@@ -73,8 +74,12 @@ goBankAccount(): void{
     this.router.navigate(['bank-account'])
 }
 
-  ngOnInit(): void {
+  ngOnInit(): void { if ( AuthService.authenticated){
     this.getTransactions()
+  }else{
+    this.router.navigate(['login'])
+  }
+
   }
 
   doDisplaySendMoney() {
@@ -131,7 +136,7 @@ getIban(){
 }
   doTransfer() {
     this.transfer = this.bTransferForm.value
-   // this.payment.creditAccountEmail = this.contactEmail
+
     this.transactionService.addTransfer(this.transfer).pipe(
       take(1),
       tap(event => {
@@ -227,7 +232,7 @@ getIban(){
 
   }
   ngAfterViewInit() {
-    //  this.dataSource.paginator = this.paginator;
+
   }
 }
 

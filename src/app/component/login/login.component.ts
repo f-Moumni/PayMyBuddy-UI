@@ -36,26 +36,20 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
-      //  this.roles = this.tokenStorage.getUser().roles;
+
     }
   }
 
   onLogin(): void {
- /*   this.authService.login(this.signInForm.value).subscribe(
-      data => {
-        this.tokenStorage.saveToken(data.accessToken);
-        this.tokenStorage.saveUser(data.mail);
-        this.router.navigate([`home`])
-      }
-    );*/
     this.authService.login(this.signInForm.value).pipe(
       take(1),
       tap(event => {
         this.tokenStorage.saveToken(event.accessToken,this.checked);
+        AuthService.authenticated =true;
         this.router.navigate([`home`])
       }, (err: HttpErrorResponse) => {
         this.isLoggedIn = false
-        this.errorMessage ="email and/or the password are not correct. "
+        this.errorMessage ="email and/or password are not correct. "
       })
     ).subscribe();
   }

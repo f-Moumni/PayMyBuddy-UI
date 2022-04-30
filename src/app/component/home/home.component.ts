@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from "../../service/auth-service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../../service/token-storge-service";
 import {User} from "../../model/app-user.model";
 
@@ -16,16 +16,19 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public authService: AuthService,
-    private actRoute: ActivatedRoute,
+    private router: Router,
   private tokenS :TokenStorageService
   ) {
-    let mail = tokenS.getUser();
+
+
+  }
+  ngOnInit() {
+    if (AuthService.authenticated){
     this.authService.getUserProfile().subscribe((res) => {
       this.currentUser = res.data.account;
       this.firstName =this.currentUser.firstName;
       this.balance =this.currentUser.balance;
-    });
+    });}else { this.router.navigate(['login'])}
   }
-  ngOnInit() {}
 
 }

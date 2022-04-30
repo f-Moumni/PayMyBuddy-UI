@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {TokenStorageService} from "../../service/token-storge-service";
+import {AuthService} from "../../service/auth-service";
 
 @Component({
   selector: 'app-header',
@@ -17,6 +18,7 @@ currentUserEmail !:string;
 
   doLogout() {
     let removeToken = this.token.removeToken();
+    AuthService.authenticated=false;
     if (removeToken == null) {
       this.router.navigate(['login']);
     }

@@ -6,6 +6,7 @@ import {BankService} from "../../service/bank.service";
 import {Router} from "@angular/router";
 import {take, tap} from "rxjs";
 import {HttpErrorResponse} from "@angular/common/http";
+import {AuthService} from "../../service/auth-service";
 
 @Component({
   selector: 'app-bank-account',
@@ -20,6 +21,7 @@ export class BankAccountComponent implements OnInit {
   message: string;
 
   constructor(
+    private router :Router,
     private fb: FormBuilder,
     private bankService : BankService,
   ) {
@@ -31,6 +33,7 @@ export class BankAccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (AuthService.authenticated){
       this.bankService.getBankAccount().pipe(
         take(1),
         tap(event => {
@@ -41,7 +44,9 @@ export class BankAccountComponent implements OnInit {
           }) ;
         }, (err: HttpErrorResponse) => {
           this. isLoaded = false
-        })).subscribe();
+        })).subscribe()} else {
+      this.router.navigate(['login'])
+    };
 
   }
 
